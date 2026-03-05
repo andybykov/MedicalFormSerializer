@@ -1,0 +1,88 @@
+.content {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 15px;
+  padding: 2em 2em 3em 2em;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.18); /* тень */
+  max-width: 1000px;
+}
+
+/* Гибкие контейнеры */
+.flex-container {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  margin: 0;
+  justify-content: space-between;
+}
+.flex_left {
+  flex-grow: 7;
+}
+
+.flex_right {
+  flex-grow: 3;
+}
+
+/* Формы */
+.form-group {
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.form-group label {
+  margin-right: 2px;
+  font-weight: bold;
+}
+.delivered {
+  width: 50%;
+}
+/* Поля ввода */
+.form-group input,
+.form-group textarea,
+.form-group select {
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  width: 100%;
+  font-size: 13px;
+  min-height: 40px;
+  margin: 0 6px 10px 0;
+  border-radius: 11px;
+  padding: 0.5em;
+  box-sizing: border-box;
+  transition: all 0.3s;
+  outline: none;
+  cursor: text;
+  overflow: auto;
+}
+.form-group textarea {
+  min-height: 40px;
+  max-height: 200px;
+  resize: vertical;
+}
+
+/* Состояния полей */
+.form-group input:hover,
+.form-group textarea:hover,
+.form-group select:hover {
+  background: #d3d3d3;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  background: #fff;
+  border: 2px solid #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  font-weight: bold;
+}
+
+/* Специальные элементы */
+.diagnosis {
+  width: 100%;
+  font-weight: bold;
+}
+
+.diagnosis > textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  font-size: 14px;
+}
