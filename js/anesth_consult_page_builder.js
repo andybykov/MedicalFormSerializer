@@ -1,9 +1,7 @@
 /* Page Builder */
 function pageBuilder() {
-  addCurrentYearInSpan("current-year");
   //  addElementToMenu('main-menu-ul', 'index.html','TEXT')
   //addElementToMainMenu("main-menu-ul", "dropdown-item", mapElements);
-  addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
   //builder('main-form');
   addLabelInputWithType("date", "date", "Дата", getCurrentDate() );
   addLabelInputWithType("time", "time", "Время", "11:00");

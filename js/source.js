@@ -33,9 +33,10 @@ function getCurrentYear() {
 
 // Получаем текущую дату
 function getCurrentDate() {
-  const dd = new Date().toLocaleDateString("en-CA"); // en-CA YYYY-MM-DDD
-  console.log(dd);
-  return dd;
+  const currDate = new Date().toLocaleDateString("en-CA"); // en-CA YYYY-MM-DDD
+  //DEBUG
+  //console.log(dd);
+  return currDate;
 }
 
 // вставка года в Span
@@ -44,6 +45,13 @@ function addCurrentYearInSpan(targetTagId) {
   const date = getCurrentYear();
   //targetTag.textContent = new Date().getFullYear();
   targetTag.innerText = date;
+}
+
+// добавляет текст в выбранный элемент
+function addTexInElement(tagId, text){
+  tag = document.getElementById(tagId);
+  tag.innerText = text;
+  console.warn(text);
 }
 
 /* ГЛАВНОЕ МЕНЮ */
@@ -203,7 +211,7 @@ function addLabelInput(
   value = "",
   subtext = "",
   placeholder,
-  required = true
+  required = true,
 ) {
   const tag = document.getElementById(targetTagId);
 
@@ -222,7 +230,7 @@ function addLabelInput(
   if (placeholder) {
     input.placeholder = placeholder;
   }
-  input.setAttribute("required", required)
+  input.setAttribute("required", required);
   // bootstrap
   input.setAttribute("class", "form-control");
 
@@ -329,7 +337,13 @@ function addLabelSelect(targetTagId, name, options = [], subtext = "") {
 }
 
 // Создание и добавление label + datalist
-function addLabelDatalist(targetTagId, name, options = [], subtext = "", required = true) {
+function addLabelDatalist(
+  targetTagId,
+  name,
+  options = [],
+  subtext = "",
+  required = true,
+) {
   // ID
   const inputId = `${targetTagId}-input`;
   const datalistId = `${targetTagId}-datalist`;
@@ -471,15 +485,13 @@ function getArrayFromContainer(containerId) {
         value = `${lastValue.trim()}, ${value.trim()}`; // добавялем текущее значение
         result.pop(); // удаляем последний элемент
       }
-// если это дата
+      // если это дата
       if (container.type === "date") {
-      value = formatDateToHumanView(container.value); // меняем в человеческий формат
-    }
+        value = formatDateToHumanView(container.value); // меняем в человеческий формат
+      }
 
       result.push([name, value]);
     }
-
-    
 
     // совпадение по классу subtext.
     if (container.classList.contains("subtext")) {
@@ -556,7 +568,8 @@ function formatDateToHumanView(date) {
   const year = date[0];
 
   const result = `${day}.${month}.${year}`;
-  console.log(result);
+  //DEBUG
+  //console.log(result);
 
   return result;
 }
@@ -737,17 +750,48 @@ function loadFormFromStorage(formId) {
 // валидцаия формы
 function validateForm(formId) {
   const form = document.getElementById(formId);
-  
+
   if (form.checkValidity()) {
     // все required поля заполнены
-    console.log('Форма валидна');
+    console.log("Форма валидна");
     return true;
   } else {
-    // Форма невалидна 
+    // Форма невалидна
     form.reportValidity();
-    console.log('Заполните обязательные поля');
+    console.log("Заполните обязательные поля");
     return false;
   }
+}
+// полная дата с месяцами
+function getHumanablerDate() {
+  const days = [
+    "Воскресенье",
+    "Понедельник",
+    "Вторник",
+    "Среда",
+    "Четверг",
+    "Пятница",
+    "Суббота",
+  ];
+  const months = [
+    "Января",
+    "Февраля",
+    "Марта",
+    "Апреля",
+    "Мая",
+    "Июня",
+    "Июля",
+    "Августа",
+    "Сентября",
+    "Октября",
+    "Ноября",
+    "Декабря",
+  ];
+
+  const today = new Date();
+  const result = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}, ${days[today.getDay()]}`;
+  //console.log(`Сегодня: ${result}`);
+  return result
 }
 
 // Очистка localStorage
@@ -760,14 +804,10 @@ function clearLocalStorage() {
 /* Автозапуск при загрузке DOM */
 function onLoadPage() {
   pageBuilder();
+  const date = `Сегодня: ${getHumanablerDate()}`;
+  addTexInElement("upper-header-text", date);
+  addCurrentYearInSpan("current-year");
+  addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
 }
 // Обработчки события загрузки всего DOM - DOMContentLoaded
 document.addEventListener("DOMContentLoaded", onLoadPage);
-
-
-const myModal = document.getElementById('myModal')
-const myInput = document.getElementById('myInput')
-
-myModal.addEventListener('shown.bs.modal', () => {
-  myInput.focus()
-})
