@@ -114,10 +114,8 @@ function addElementToMainMenu(targetTagId, classElement = "", mapElements) {
 
     if (!classElement) {
       aTag.setAttribute("class", "item");
-    }
-    else
-    {
-      aTag.setAttribute("class", classElement)
+    } else {
+      aTag.setAttribute("class", classElement);
     }
 
     aTag.href = key;
@@ -147,8 +145,13 @@ function addLabel(id, forElement = "", text = "") {
   const label = document.createElement("label");
   label.setAttribute("for", labelForId);
   //label.id = labelId;
-  label.textContent = text + " ";
-   // bootstrap
+  if (text) {
+    label.textContent = text + " ";
+  } else {
+    label.innerHTML = "&nbsp; <!-- HTML space -->";
+  }
+
+  // bootstrap
   label.setAttribute("class", "form-label");
 
   return label;
@@ -244,6 +247,40 @@ function addLabelInputWithType(
   tag.appendChild(addedText);
 }
 
+// Label + Radiobutton
+function addLabelRadioButton(targetTagId, name, text, cheked, subtext = "") {
+  const tag = document.getElementById(targetTagId);
+  const type = "radio";
+
+  // IDs
+  const inputId = `${targetTagId}-input`;
+
+  const label = addLabel(targetTagId, "input", text);
+
+  const value = name;
+
+  // input
+  const input = document.createElement("input");
+  input.setAttribute("id", inputId);
+  input.setAttribute("type", type);
+  input.setAttribute("name", name);
+  input.setAttribute("value", value);
+
+  if (cheked) {
+    input.checked = cheked;
+  }
+
+  //bootstrap
+  input.setAttribute("class", "form-check-input");
+
+  const addedText = addSubText(targetTagId, subtext);
+
+  // добавление
+  tag.appendChild(input);
+  tag.appendChild(label);
+  tag.appendChild(addedText);
+}
+
 // Создает и добавляет label + select
 function addLabelSelect(targetTagId, name, options = [], subtext = "") {
   const tag = document.getElementById(targetTagId);
@@ -287,6 +324,7 @@ function addLabelDatalist(targetTagId, name, options = [], subtext = "") {
   const input = document.createElement("input");
   input.id = inputId;
   input.name = name; // NAME!!
+
   input.setAttribute("list", datalistId);
   input.placeholder = options[0];
   // DEBUG!!!!!
@@ -543,20 +581,16 @@ function pageBuilder() {
   addCurrentYearInSpan("current-year");
   //  addElementToMenu('main-menu-ul', 'index.html','TEXT')
   addElementToMainMenu("main-menu-ul", "dropdown-item", mapElements);
-   addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
+  addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
   //builder('main-form');
-  addLabelInputWithType(
-    "date",
-    "date",
-    "Дата",
-    "2026-01-01",
-    "от рождества Христова",
-  );
-  addLabelInputWithType("time", "time", "Время", "11:00", "HH:MM");
+  addLabelInputWithType("date", "date", "Дата", "2026-01-01", "dd.mm.yyyy");
+  addLabelInputWithType("time", "time", "Время", "11:00", "hh:mm");
+  addLabelRadioButton("male", "gender", "Мужчина", true);
+  addLabelRadioButton("female", "gender", "Женщина");
   addLabelSelect("blood-gr", "Группа крови", bloodgr);
   addLabelDatalist("blood-gr-rh", "Резус фактор", bloodgrRh);
 
-  addHeading("block-anthropometric-data", "Антропометрические данные", "4"); // Звголовок
+  addHeading("block-anthropometric-data", "Антропометрические данные", "5"); // Звголовок
 
   addLabelInput("growth", "Рост", "170", "см");
   addLabelInput("mass", "Масса", "70", "кг");
@@ -574,7 +608,7 @@ function pageBuilder() {
   addLabelInput("bad-habits", "Вредные привычки", "нет", "");
   addLabelInput("other-operations", "Операции, травмы", "нет", "");
 
-  addHeading("block-physical-exam", "Физикальное обследование"); // Заголовок
+  addHeading("block-physical-exam", "Физикальное обследование", "4"); // Заголовок
 
   addLabelDatalist("patient-state", "Состояние", patientState);
   addLabelDatalist("patient-consciousness", "Сознание", patientConsciousness);
@@ -603,6 +637,7 @@ function pageBuilder() {
   addLabelDatalist("patient-heart-tones-2", "", patientHeartTones[1]);
   addLabelInput("patient-ad", "АД", "120/75", "mmHg");
   addLabelInput("patient-pulse", "ЧСС", "65", "/min");
+  addLabelDatalist("patient-ecg", "Ритм ЭКГ", patientEcg[0]);
   //two
   addLabelDatalist(
     "patient-auscultation-type-1",
@@ -637,7 +672,7 @@ function pageBuilder() {
   );
   addLabelDatalist(
     "mallampati",
-    "Прогностическая оценка трудного дыхательного пути",
+    "Прогнозирование трудного дыхательного пути",
     mallampati,
   );
   addLabelInput(
