@@ -1,111 +1,206 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="img/icons/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="css/lib/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <title>Сериализатор форм</title>
-  </head>
 
-  <body>
-    <header>
-      <img src="img/logo2.png" alt="логотип тут" class="logo" />
-      <div class="nav">
-        <a href="#" onclick="toggleMenu()">
-          <span id="toggle-pict">🔽</span>
-          <span id="toggle-menu">Меню</span>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/icons/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="css/lib/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <title>Сериализатор медицинских форм</title>
+</head>
+
+<body>
+  <header>
+    <!-- Навигационная панель -->
+    <div class="d-block px-3 py-2 text-center text-bold skippy" style="background-color: #083880; opacity: 90%">
+      <a href="https://getbootstrap.com/" class="text-white text-decoration-none">Работает с Bootstrap!</a>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary bg-gradient mb-4 py-0">
+      <div class="container d-flex align-items-center">
+        <!-- Логотип -->
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+          <img src="img/stethoscope_light.png" height="50px" alt="Изображение фонендоскопа" />FormSerializer
         </a>
-        <a href="#">На главную</a>
-        <a href="test1.html">Test1</a>
-      </div>
-    </header>
+        <!-- Ссылка на источник изображения: https://sergeychikin.ru/365/ Image by Сергей Чикин, brakodelnya@gmail.com-->
 
-    <div class="main">
-      <!-- Menu -->
-      <div class="menu" id="main-menu">
-        <ul id="main-menu-ul">
-          <!-- строит: li><a href=LINK>TEXT</a></li> через addElementToMainMenu(targetTagId, LINK, TEXT) -->
-        </ul>
-      </div>
-      <!-- Menu -->
-
-      <div class="content">
-        <h1>Сериализатор медицинских форм</h1>
-
-        <p>Инструмент превращения введенных данных формы в текстовый формат</p>
-
-        <p>
-          Мы собрали наиболее часто применяемые форматы структуры медицинского
-          документа в виде формы
-        </p>
-
-        <b
-          ><u
-            >Вам более не потребуется редактировать готовые шаблоны
-            документов</u
-          ></b
-        >
-
-        <div>
-          <h3>Как это работает:</h3>
-          <ul>
-            <li>
-              Вы заполняете форму и сохраняете готовый документ в текстовом
-              формате
+        <!-- Сворачиваемое меню  -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Основные пункты меню (me-auto - выравнивание слева) -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html">Главная</a>
+              <!-- Активная ссылка -->
             </li>
-            <li>
-              Вы сохраняете готовый документ — система автоматически преобразует
-              введенные данные в структурированный текстовый формат
+            <li class="nav-item">
+              <a class="nav-link" href="anesth_consultation.html">Осмотр анестезиолога</a>
+              <!-- Обычная ссылка -->
             </li>
-            <li>
-              Вы получаете медицинский документ — готовый к передаче в историю
-              болезни
+
+            <!-- Выпадающее меню dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Протоколы
+              </a>
+              <!-- Список выпадающего меню -->
+              <ul id="main-menu-ul" class="dropdown-menu bg-light" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Протокол ЦВК</a></li>
+                <li><a class="dropdown-item" href="#">Протокол артерия</a></li>
+                <li><a class="dropdown-item" href="#">Протокол анестезии</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                  <!-- Разделитель пунктов меню -->
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">Другие протоколы</a>
+                </li>
+              </ul>
+            </li>
+
+            <!-- Неактивная  ссылка -->
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Дополнительно</a>
             </li>
           </ul>
+
+          <!-- Форма поиска как flex-контейнер -->
+          <form class="d-flex" onsubmit="handleSearch(event)">
+            <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
+            <button class="btn btn-outline-light" type="submit">
+              Найти
+            </button>
+          </form>
         </div>
+      </div>
+    </nav>
+  </header>
 
-        <div class="content-summary">
-          <details>
-            <summary>Дополнительная информация</summary>
+  <!-- Кнопка открытия бокового меню  -->
+  <button class="btn btn-secondary position-fixed bottom-0 start-0 m-3" type="button" data-bs-toggle="offcanvas"
+    data-bs-target="#sidebarMenu">
+    ☰
+  </button>
 
-            <p>
-              <strong>Полнота данных</strong><br />
-              Форма имеет практически все необходимые поля, которые можно
-              встретить в рутинной практике анестезиолога-реаниматолога. От
-              оценки рисков до фиксации этапов операции — ничего не упущено.
-            </p>
+  <!-- Боковое меню offcanvas (динамическое меню будет заполнено скриптом) -->
+  <div class="offcanvas offcanvas-start bg-light" id="sidebarMenu" aria-labelledby="sidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="sidebarLabel">Меню</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <hr />
+    <div class="offcanvas-body">
+      <ul class="nav nav-pills flex-column mb-auto" id="menu-ul"></ul>
+    </div>
+  </div>
 
-            <p>
-              <strong>Индивидуальный подход</strong><br />
-              Изменяемые данные — показатели гемодинамики (АД, ЧСС, SpO₂, ЦВД),
-              параметры ИВЛ, дозировки препаратов и прочее — заполняются
-              индивидуально под каждого пациента и конкретную клиническую
-              ситуацию.
-            </p>
+  <!-- ОСНОВНОЙ КОНТЕНТ  -->
+  <main class="container my-5">
+    <!-- Заголовок  -->
+    <div class="row mb-5">
+      <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 fw-bold">Сериализатор медицинских форм</h1>
+        <p class="lead fs-3">Инструмент превращения введённых данных формы в текстовый формат</p>
+        <p class="fs-5 text-muted">
+          Наиболее часто применяемые форматы структуры медицинского документа в виде формы.<br>
+          Вам более не потребуется редактировать готовые шаблоны документов.
+        </p>
+      </div>
+    </div>
 
-            <p>
-              <strong>Гибкость</strong><br />
-              Вы не привязаны к жестким шаблонам. Форма учитывает, что каждый
-              случай уникален, и позволяет вносить персонализированные данные
-              туда, где это необходимо.
-            </p>
-          </details>
+    <!-- Как это работает  -->
+    <div class="row mb-5">
+      <div class="col-12 text-center mb-4">
+        <h2 class="fw-semibold">Как это работает?</h2>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center">
+            <div
+              class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px;">1</div>
+            <h5 class="card-title">Заполните форму</h5>
+            <p class="card-text">Выберите нужный шаблон (осмотр анестезиолога, протокол операции и т.д.) и внесите
+              данные пациента.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center">
+            <div
+              class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px;">2</div>
+            <h5 class="card-title">Нажмите «Скопировать» или «Скачать»</h5>
+            <p class="card-text">Система автоматически преобразует введённые данные в структурированный текстовый
+              формат.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center">
+            <div
+              class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px;">3</div>
+            <h5 class="card-title">Вставьте в историю болезни</h5>
+            <p class="card-text">Полученный текст готов к использованию — остаётся только перенести его в медицинскую
+              документацию.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <footer>form serializer © <span id="current-year"></span></footer>
+    <!-- Дополнительная информация  -->
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 bg-light">
+          <div class="card-body">
+            <h5 class="card-title">Полнота данных</h5>
+            <p class="card-text">Форма имеет практически все необходимые поля, которые можно встретить в рутинной
+              практике анестезиолога-реаниматолога. От оценки рисков до фиксации этапов операции — ничего не упущено.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 bg-light">
+          <div class="card-body">
+            <h5 class="card-title">Индивидуальный подход</h5>
+            <p class="card-text">Изменяемые данные — показатели гемодинамики (АД, ЧСС, SpO₂, ЦВД), параметры ИВЛ,
+              дозировки препаратов и прочее — заполняются индивидуально под каждого пациента и конкретную клиническую
+              ситуацию.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 bg-light">
+          <div class="card-body">
+            <h5 class="card-title">Гибкость</h5>
+            <p class="card-text">Вы не привязаны к жестким шаблонам. Форма учитывает, что каждый случай уникален, и
+              позволяет вносить персонализированные данные туда, где это необходимо.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <script src="js/lib/bootstrap.min.js">
-      // bootstrap
-    </script>
-    <script src="js/source.js">
-      // JS
-    </script>
-    <script src="js/variables.js">
-      // JS
-    </script>
-  </body>
+    <!-- Призыв к действию -->
+    <div class="text-center mt-5">
+      <a href="anesth_consultation.html" class="btn btn-primary btn-lg px-5 py-3">Перейти к осмотру анестезиолога</a>
+    </div>
+  </main>
+
+  <!-- Футер  -->
+  <footer class="bg-light py-4 mt-5">
+    <div class="container text-center">
+      FormSerializer © <span id="current-year"></span>
+    </div>
+  </footer>
+
+  <!-- Подключение скриптов  -->
+  <script src="js/lib/bootstrap.min.js"></script>
+  <script src="js/source.js"></script>
+  <script src="js/variables.js"></script>
+</body>
+
 </html>

@@ -1,9 +1,10 @@
 /* ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ */
+// мапа для меню
 const mapElements = new Map([
-  ["index.html", "Главная"],
-  ["#", "Осмотр"],
-  ["#", "Протокол ЦВК"],
-  ["test1.html", "Test1"],
+  ["index.html", "Главная страница"],
+  ["anesth_consultation.html", "Осмотр ансетезиолога"],
+  ["#", "Протокол ЦВК"]
+
 ]);
 
 /* ФУНКЦИИ */
@@ -114,10 +115,8 @@ function addElementToMainMenu(targetTagId, classElement = "", mapElements) {
 
     if (!classElement) {
       aTag.setAttribute("class", "item");
-    }
-    else
-    {
-      aTag.setAttribute("class", classElement)
+    } else {
+      aTag.setAttribute("class", classElement);
     }
 
     aTag.href = key;
@@ -147,8 +146,13 @@ function addLabel(id, forElement = "", text = "") {
   const label = document.createElement("label");
   label.setAttribute("for", labelForId);
   //label.id = labelId;
-  label.textContent = text + " ";
-   // bootstrap
+  if (text) {
+    label.textContent = text + " ";
+  } else {
+    label.innerHTML = "&nbsp; <!-- HTML space -->";
+  }
+
+  // bootstrap
   label.setAttribute("class", "form-label");
 
   return label;
@@ -161,11 +165,9 @@ function addSubText(id, subtext) {
 
   const addedText = document.createElement("span");
   addedText.setAttribute("id", addedTextId);
-  addedText.setAttribute("class", "subtext");
-  addedText.textContent = " " + subtext;
-
   // bootstrap
-  addedText.setAttribute("class", "form-text");
+  addedText.setAttribute("class", "form-text subtext");
+  addedText.textContent = " " + subtext;
 
   return addedText;
 }
@@ -188,7 +190,7 @@ function addHeading(targetTagId, text, size = "3") {
 }
 
 // Добавляет <label> и <input> в указанный контейнер
-function addLabelInput(targetTagId, name, value = "", subtext = "") {
+function addLabelInput(targetTagId, name, value = "", subtext = "", placeholder) {
   const tag = document.getElementById(targetTagId);
 
   // IDs
@@ -203,6 +205,9 @@ function addLabelInput(targetTagId, name, value = "", subtext = "") {
   input.setAttribute("type", type);
   input.setAttribute("name", name);
   input.setAttribute("value", value);
+  if(placeholder){
+    input.placeholder = placeholder;
+  }
   // bootstrap
   input.setAttribute("class", "form-control");
 
@@ -241,6 +246,40 @@ function addLabelInputWithType(
   // добавление
   tag.appendChild(label);
   tag.appendChild(input);
+  tag.appendChild(addedText);
+}
+
+// Label + Radiobutton
+function addLabelRadioButton(targetTagId, name, text, cheked, subtext = "") {
+  const tag = document.getElementById(targetTagId);
+  const type = "radio";
+
+  // IDs
+  const inputId = `${targetTagId}-input`;
+
+  const label = addLabel(targetTagId, "input", text);
+
+  const value = text;
+
+  // input
+  const input = document.createElement("input");
+  input.setAttribute("id", inputId);
+  input.setAttribute("type", type);
+  input.setAttribute("name", name);
+  input.setAttribute("value", value);
+
+  if (cheked) {
+    input.checked = cheked;
+  }
+
+  //bootstrap
+  input.setAttribute("class", "form-check-input");
+
+  const addedText = addSubText(targetTagId, subtext);
+
+  // добавление
+  tag.appendChild(input);
+  tag.appendChild(label);
   tag.appendChild(addedText);
 }
 
@@ -287,10 +326,11 @@ function addLabelDatalist(targetTagId, name, options = [], subtext = "") {
   const input = document.createElement("input");
   input.id = inputId;
   input.name = name; // NAME!!
+
   input.setAttribute("list", datalistId);
   input.placeholder = options[0];
   // DEBUG!!!!!
-  input.value = options[0];
+  //input.value = options[0];
 
   const datalist = document.createElement("datalist");
 
@@ -324,7 +364,7 @@ function addTextarea(targetTag, name, placeholder = "") {
   textarea.cols = 100;
   textarea.placeholder = placeholder;
   // DEBUG!!!!!
-  textarea.value = "ИБС. СН 2 ФК. ГБ 3ст, 4ст, р4.";
+  //textarea.value = "ИБС. СН 2 ФК. ГБ 3ст, 4ст, р4.";
 
   const textareaLabel = addLabel(textareaId, "", name);
 
@@ -379,7 +419,7 @@ function startEventListenFocusBsa(tagId) {
   });
 }
 
-// Получение данных из контейнера
+// Получение массива из контейнера-ФОРМЫ
 function getArrayFromContainer(containerId) {
   let container = document.getElementById(containerId);
   const result = [];
@@ -395,9 +435,13 @@ function getArrayFromContainer(containerId) {
       container.tagName === "SELECT" ||
       container.tagName === "TEXTAREA"
     ) {
+      if (container.name === "gender") {
+        // пол не обрабатывааем
+        continue;
+      }
+
       let name = container.name;
       let value = container.value;
-      //const type = "data";
 
       // если пустое имя, значит это продолжение предыдущего input
       if (!name) {
@@ -412,7 +456,7 @@ function getArrayFromContainer(containerId) {
       result.push([name, value]);
     }
 
-    // совпадение по классу subtext
+    // совпадение по классу subtext.
     if (container.classList.contains("subtext")) {
       const subtext = container.textContent;
       // получаем последнй элемент
@@ -444,91 +488,193 @@ function getArrayFromContainer(containerId) {
   return result;
 }
 
-// Получение полей формы
-/*
-function getArrayFromForm(formId) {
+// Сохранение в localStorage
+function saveFormStorage(formId) {
   const form = document.getElementById(formId);
+  const elementsArr = Array.from(form.elements); // массив
 
-  //единцы измерения
-  const units = new Map([
-    ["Рост", "см"],
-    ["Масса", "кг"],
-    ["ППТ", "м²"],
-    ["АД", "mmHg"],
-    ["ЧД", "в мин"],
-    ["ЧСС", "в мин"],
-    ["SpO2", "%"],
-  ]);
-
-  // Собираем все значения в объект
   const formData = {};
-  // преобразование в массив
-  const elementsArr = Array.from(form.elements);
-  console.log(form);
-  // Перебираем все элементы
-  elementsArr.forEach((element, index) => {
-    // временная переменная для значения
-    let currentVal = element.value;
 
-    console.log();
-
-    let nameArr = element.name.trim();
-    let unit = units.get(nameArr); // получаем значение по ключу
-
-    // имя совпадает с ключом из мапы
-    if (nameArr && unit) {
-      currentVal = `${currentVal} ${unit}`; // собираем с единицами измерения
+  elementsArr.forEach((element) => {
+    //  есть name
+    if (element.name) {
+      // radio выбранное значение
+      if (element.type === "radio") {
+        if (element.checked) {
+          formData[element.name] = element.value;
+        }
+      }
+      // Для остальных полей -значение
+      else {
+        formData[element.name] = element.value;
+      }
     }
-
-    if (!element.name) {
-      // получаем предыдущий элемент
-      let prevElement = elementsArr[index - 1];
-
-      //значение предыдущего элемента
-      let prevVal = prevElement.value;
-      //имя предыдущего элемента
-      let pervName = prevElement.name;
-
-      // правим текущее значение (предыдущее + текущее)
-      currentVal = `${prevVal} ${currentVal}`;
-
-      formData[pervName] = currentVal;
-    } else {
-      formData[element.name] = currentVal;
-    }
-
-    // console.log(`${element.name.trim()}: ${val || "(no units!)"}`);
-
-    //if (element.name) {
-
-    //console.log(`${element.name}: ${element.value} (${element.tagName})`);
-    //console.log(`${element.name}: ${element.value}`);
-    //}
   });
 
-  //console.log(formData);
-
-  const formArr = Object.entries(formData);
+  // Сохраняем в localStorage
+  localStorage.setItem("formData", JSON.stringify(formData)); //в JSON
 }
-*/
-// Форматирование массива в строку
-function textFromArray(array) {
-  let result = "";
-  array.forEach(([name, value]) => {
-    // если не разделитель и не заголовок
-    if (!(name == "spacer") && !(name == "heading"))
-      result += name.trim() + ":  " + value.trim() + "\n";
 
+// загрузка из localStorage
+function loadFormFromStorage(formId) {
+  const form = document.getElementById(formId);
+  const savedData = localStorage.getItem("formData");
+
+  if (!savedData) return; // пусто!
+
+  const formData = JSON.parse(savedData);
+  const elementsArr = Array.from(form.elements);
+
+  elementsArr.forEach((element) => {
+    if (element.name && formData.hasOwnProperty(element.name)) {
+      if (element.type === "radio") {
+        // Для radio нужно установить checked, если значение совпадает
+        element.checked = element.value === formData[element.name];
+      } else {
+        element.value = formData[element.name];
+      }
+    }
+  });
+}
+
+// Очистка localStorage
+function clearLocalStorage(){
+  alert("Хранилище очищено!");
+  localStorage.clear();
+  location.reload(); //перезагрузка страницы
+}
+
+// Форматирование массива в строку
+function getStringFromArray(array) {
+  let result = "";
+  const exp = /[.]/; // регулярное выражение
+
+  array.forEach(([name, value]) => {
+    // если не разделитель и не заголовок, значит обычный текст
+    if (!(name == "spacer") && !(name == "heading")) {
+      let line = "";
+      line += name.trim() + ":  " + value.trim();
+
+      const endLine = line[line.length - 1]; // конец строки
+      // проверяем наличие в строке выражения exp
+      if (!exp.test(endLine)) {
+        line += "."; // добавляем точку
+      }
+      result += line + "\n";
+    }
     // разделитель
     if (name == "spacer") {
-      result += "-".repeat(100) + "\n\n";
+      result += "-".repeat(100) + "\n";
     }
     // заголовок
     if (name == "heading") {
-      result += value.trim() + "\n";
+      result += "***" + value.trim() + "\n";
     }
   });
-  console.log(result);
+
+  return result;
+}
+
+// Форматирование строки в текст
+function getTextFromString(str) {
+  //разбивает строку на массив подстрок по "\n"
+  const lines = str.split("\n");
+
+  const spacer = "----"; // разделитель
+
+  // счетчик разделителей
+  let spacerConnter = 0;
+
+  let result = "";
+
+  // Обрабатываем каждую строку
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
+
+    if (!line) continue; // пустая строка - пропускаем
+
+    // это заголовок
+    if (line.startsWith("***")) {
+      const header = line.replace("***", " "); // убираем лишнее
+      result += "\n" + header + "\n";
+      continue; // на следующую итерацию
+    }
+
+    // считаем разделители
+    if (line.includes(spacer)) {
+      spacerConnter++;
+      result += line.trim() + "\n";
+      continue;
+    }
+
+    // Форматирование между разделитлями
+    switch (spacerConnter) {
+      case 2:
+        result += line.trim() + "\n"; // обработка текста после второго разделителя
+        break;
+
+      case 3:
+        if (line.length > 100) {
+          const tmpLine = line.split(" "); // разеделям на массив по пробелу
+          const idxCenter = parseInt(tmpLine.length / 2); // половина массива
+
+          for (let idx = 0; idx < tmpLine.length; idx++) {
+            result += tmpLine[idx] + " "; // добвляем по одному слову
+            // первая половина
+            if (idx == idxCenter - 1) {
+              result += "\n";
+            }
+            // вторая половина
+            if (idx == tmpLine.length - 1) {
+              result += "\n";
+            }
+          }
+        } else {
+          if (line.length < 20) {
+            result += line.trim() + " ";
+          } else {
+            result += line + "\n";
+          }
+        }
+        break;
+
+      default:
+        result += line.trim() + "\n";
+    }
+  }
+
+  return result;
+}
+
+// Копирование в буфер-обмена
+function copyToClipboard(text) {
+  //Clipboard API
+  try {
+    navigator.clipboard.writeText(text);
+    console.log("Text copied!");
+    window.alert("Текст скопирован в буфер обмена!");
+  } catch (err) {
+    console.error("Failed to copy:", err);
+  }
+}
+
+// сохранение в файл
+function saveToFile(data, filename = "data") {
+  const timeStamp = new Date().getTime();
+  //  Упаковываем данные в Blob-контейнер
+  const blob = new Blob([data], { type: "text/plain" });
+
+  //  временная ссылка на Blob
+  const url = URL.createObjectURL(blob);
+
+  // Создаем виртуальную ссылку и кликаем по ней
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename + timeStamp + ".txt";
+  link.click();
+
+  //очищаеим память
+  URL.revokeObjectURL(url);
 }
 
 // Рапечатка массива
@@ -538,130 +684,24 @@ function printArray(array) {
   });
 }
 
-/* Page Builder */
-function pageBuilder() {
-  addCurrentYearInSpan("current-year");
-  //  addElementToMenu('main-menu-ul', 'index.html','TEXT')
-  addElementToMainMenu("main-menu-ul", "dropdown-item", mapElements);
-   addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
-  //builder('main-form');
-  addLabelInputWithType(
-    "date",
-    "date",
-    "Дата",
-    "2026-01-01",
-    "от рождества Христова",
-  );
-  addLabelInputWithType("time", "time", "Время", "11:00", "HH:MM");
-  addLabelSelect("blood-gr", "Группа крови", bloodgr);
-  addLabelDatalist("blood-gr-rh", "Резус фактор", bloodgrRh);
+function handleSearch(event) {
+  event.preventDefault(); // ОСТАНОВИТЬ отправку формы, чтобы не перезагружалась страница
+  // Получаем значение из input
+  const searchInput = event.target.querySelector('input[type="search"]');
+  const searchText = searchInput.value;
 
-  addHeading("block-anthropometric-data", "Антропометрические данные", "4"); // Звголовок
-
-  addLabelInput("growth", "Рост", "170", "см");
-  addLabelInput("mass", "Масса", "70", "кг");
-  addLabelInput("bsa-result", "ППТ", "", "м2");
-  addTextarea("diagnosis", "Диагноз", "начните вводить...");
-  addLabelInput("complaints", "Жалобы ", "нет", "");
-  addLabelInput("allergy", "Аллергические реакции", "нет", "");
-  addLabelInput("drugs", "Постоянный прием лекарственных препаратов", "нет");
-  addLabelInput(
-    "condition-of-veins",
-    "Состояние вен нижних конечностей",
-    conditionOfVeins,
-  );
-  addLabelInput("dentures", "Наличие съемных зубных протезов", "нет", "");
-  addLabelInput("bad-habits", "Вредные привычки", "нет", "");
-  addLabelInput("other-operations", "Операции, травмы", "нет", "");
-
-  addHeading("block-physical-exam", "Физикальное обследование"); // Заголовок
-
-  addLabelDatalist("patient-state", "Состояние", patientState);
-  addLabelDatalist("patient-consciousness", "Сознание", patientConsciousness);
-  addLabelInput(
-    "patient-status-neuro",
-    "Неврологический статус",
-    "без признаков острой неврологической симптоматики",
-  );
-  addLabelDatalist(
-    "patient-status-cognitive",
-    "Когнитивные функции",
-    patientStatusCognitive,
-  );
-  addLabelDatalist(
-    "patient-skin",
-    "Кожные покровы и видимые слизистые",
-    patientSkin,
-  );
-  addLabelDatalist("patient-edema", "Периферические отеки", patientEdema);
-  // two
-  addLabelDatalist(
-    "patient-heart-tones-1",
-    "Тоны сердца",
-    patientHeartTones[0],
-  );
-  addLabelDatalist("patient-heart-tones-2", "", patientHeartTones[1]);
-  addLabelInput("patient-ad", "АД", "120/75", "mmHg");
-  addLabelInput("patient-pulse", "ЧСС", "65", "/min");
-  //two
-  addLabelDatalist(
-    "patient-auscultation-type-1",
-    "Аускультативно дыхание",
-    patientAuscultation[0],
-  );
-  addLabelDatalist("patient-auscultation-type-2", "", patientAuscultation[1]);
-
-  addLabelInput("patient-breath-rate", "ЧД", "16", "/min");
-  addLabelInput("patient-spo2", "SpO2", "97", "%");
-
-  //two
-  addLabelDatalist("patient-abdomen-1", "Живот", patientAbdomen[0]);
-  addLabelDatalist("patient-abdomen-2", "", patientAbdomen[1]);
-  addLabelInput("patient-dyspes", "Признаки диспепсии", "нет", "");
-  addLabelDatalist("patient-urination", "Мочеиспускание", patientUrination);
-  addLabelDatalist("patient-dialisis", "Гемодиализ", ["нет", "да"]);
-
-  addLabelInput(
-    "analiysis",
-    "Данные лабораторных и инструментальных исследований ",
-    "В пределах референсных значений",
-  );
-  addLabelInput("deep-examination", "Необходимость дообследования", "нет", "");
-  addLabelInput("planned-operation", "Планируемая операция");
-  addLabelDatalist("planned-anesth", "Планируемая анестезия", plannedAnesth);
-  addLabelDatalist(
-    "asa",
-    "Анестезиологический риск ASA",
-    anesthConsultRisk,
-    "",
-  );
-  addLabelDatalist(
-    "mallampati",
-    "Прогностическая оценка трудного дыхательного пути",
-    mallampati,
-  );
-  addLabelInput(
-    "planned-monitoring",
-    "Планируемый мониторинг",
-    plannedMonitoring,
-  );
-  addLabelInput("premedecation", " Премедикация", premedecation);
-  addLabelInput("recomendations", "Рекомендации", recomendations);
-
-  // Разделители
-  addSpacer(["block-1", "block-2", "block-3", "block-5", "block-6"]);
+  if (searchText.trim()) {
+    if (window.find) {
+      window.find(searchText); //  браузерный поиск
+    } else {
+      alert("Search not supported!");
+    }
+  }
 }
 
 /* Автозапуск при загрузке DOM */
-
-// Запускаем при  загрузке страницы
 function onLoadPage() {
   pageBuilder();
-  startEventListenFocusBsa("bsa-result-input");
-
-  const formArray = getArrayFromContainer("main-form");
-  //printArray(formArray);
-  textFromArray(formArray);
 }
 // Обработчки события загрузки всего DOM - DOMContentLoaded
 document.addEventListener("DOMContentLoaded", onLoadPage);
