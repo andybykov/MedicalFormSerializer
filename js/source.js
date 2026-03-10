@@ -1,9 +1,10 @@
 /* ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ */
+// мапа для меню
 const mapElements = new Map([
-  ["index.html", "Главная"],
-  ["#", "Осмотр"],
-  ["#", "Протокол ЦВК"],
-  ["test1.html", "Test1"],
+  ["index.html", "Главная страница"],
+  ["anesth_consultation.html", "Осмотр ансетезиолога"],
+  ["#", "Протокол ЦВК"]
+
 ]);
 
 /* ФУНКЦИИ */
@@ -189,7 +190,7 @@ function addHeading(targetTagId, text, size = "3") {
 }
 
 // Добавляет <label> и <input> в указанный контейнер
-function addLabelInput(targetTagId, name, value = "", subtext = "") {
+function addLabelInput(targetTagId, name, value = "", subtext = "", placeholder) {
   const tag = document.getElementById(targetTagId);
 
   // IDs
@@ -204,6 +205,9 @@ function addLabelInput(targetTagId, name, value = "", subtext = "") {
   input.setAttribute("type", type);
   input.setAttribute("name", name);
   input.setAttribute("value", value);
+  if(placeholder){
+    input.placeholder = placeholder;
+  }
   // bootstrap
   input.setAttribute("class", "form-control");
 
@@ -326,7 +330,7 @@ function addLabelDatalist(targetTagId, name, options = [], subtext = "") {
   input.setAttribute("list", datalistId);
   input.placeholder = options[0];
   // DEBUG!!!!!
-  input.value = options[0];
+  //input.value = options[0];
 
   const datalist = document.createElement("datalist");
 
@@ -360,7 +364,7 @@ function addTextarea(targetTag, name, placeholder = "") {
   textarea.cols = 100;
   textarea.placeholder = placeholder;
   // DEBUG!!!!!
-  textarea.value = "ИБС. СН 2 ФК. ГБ 3ст, 4ст, р4.";
+  //textarea.value = "ИБС. СН 2 ФК. ГБ 3ст, 4ст, р4.";
 
   const textareaLabel = addLabel(textareaId, "", name);
 
@@ -698,33 +702,6 @@ function handleSearch(event) {
 /* Автозапуск при загрузке DOM */
 function onLoadPage() {
   pageBuilder();
-  loadFormFromStorage("main-form");
-  startEventListenFocusBsa("bsa-result-input");
 }
 // Обработчки события загрузки всего DOM - DOMContentLoaded
 document.addEventListener("DOMContentLoaded", onLoadPage);
-
-// обработчик события для кнопки копирования
-document.getElementById("copy-button").addEventListener("click", function () {
-  // Получаем текст ЗАНОВО при каждом клике
-  const formArray = getArrayFromContainer("main-form");
-  const str = getStringFromArray(formArray);
-  const text = getTextFromString(str);
-  copyToClipboard(text);
-});
-
-// обработчик кнопки сохранить текст
-document
-  .getElementById("save-to-file-button")
-  .addEventListener("click", function () {
-    const formArray = getArrayFromContainer("main-form");
-    const str = getStringFromArray(formArray);
-    const text = getTextFromString(str);
-    saveToFile(text);
-  });
-// Обработчик кнопки сохранения
-document
-  .getElementById("save-to-file-ls")
-  .addEventListener("click", function () {
-    saveFormStorage("main-form");
-  });

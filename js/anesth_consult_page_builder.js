@@ -14,14 +14,14 @@ function pageBuilder() {
 
   addHeading("block-anthropometric-data", "Антропометрические данные", "5"); // Звголовок
 
-  addLabelInput("growth", "Рост", "170", "см");
-  addLabelInput("mass", "Масса", "70", "кг");
+  addLabelInput("growth", "Рост", "", "см", "170");
+  addLabelInput("mass", "Масса", "", "кг", "80");
   addLabelInput("bsa-result", "ППТ", "", "м2");
   addTextarea("diagnosis", "Диагноз", "начните вводить...");
   addLabelInput("complaints", "Жалобы ", "нет", "");
   addLabelInput("allergy", "Аллергические реакции", "нет", "");
   addLabelInput("drugs", "Постоянный прием лекарственных препаратов", "нет");
-  addLabelInput(
+  addLabelDatalist(
     "condition-of-veins",
     "Состояние вен нижних конечностей",
     conditionOfVeins,
@@ -57,8 +57,8 @@ function pageBuilder() {
     patientHeartTones[0],
   );
   addLabelDatalist("patient-heart-tones-2", "", patientHeartTones[1]);
-  addLabelInput("patient-ad", "АД", "120/75", "mmHg");
-  addLabelInput("patient-pulse", "ЧСС", "65", "/min");
+  addLabelInput("patient-ad", "АД", "", "mmHg", "");
+  addLabelInput("patient-pulse", "ЧСС", "", "/min", "");
   addLabelDatalist("patient-ecg", "Ритм ЭКГ", patientEcg[0]);
   //two
   addLabelDatalist(
@@ -68,15 +68,15 @@ function pageBuilder() {
   );
   addLabelDatalist("patient-auscultation-type-2", "", patientAuscultation[1]);
 
-  addLabelInput("patient-breath-rate", "ЧД", "16", "/min");
-  addLabelInput("patient-spo2", "SpO2", "97", "%");
+  addLabelInput("patient-breath-rate", "ЧД", "", "/min", "");
+  addLabelInput("patient-spo2", "SpO2", "", "%", "");
 
   //two
   addLabelDatalist("patient-abdomen-1", "Живот", patientAbdomen[0]);
   addLabelDatalist("patient-abdomen-2", "", patientAbdomen[1]);
   addLabelInput("patient-dyspes", "Признаки диспепсии", "нет", "");
   addLabelDatalist("patient-urination", "Мочеиспускание", patientUrination);
-  addLabelDatalist("patient-dialisis", "Гемодиализ", ["!!нет", "да"]);
+  addLabelDatalist("patient-dialisis", "Гемодиализ", ["нет", "да"]);
 
   addLabelInput(
     "analiysis",
@@ -107,4 +107,32 @@ function pageBuilder() {
 
   // Разделители
   addSpacer(["block-1", "block-2", "block-3", "block-5", "block-6"]);
+
+  loadFormFromStorage("main-form"); // Загрузка из localStorage
+  startEventListenFocusBsa("bsa-result-input"); // слушатель на ППТ
 }
+
+// обработчик события для кнопки копирования
+document.getElementById("copy-button").addEventListener("click", function () {
+  // Получаем текст ЗАНОВО при каждом клике
+  const formArray = getArrayFromContainer("main-form");
+  const str = getStringFromArray(formArray);
+  const text = getTextFromString(str);
+  copyToClipboard(text);
+});
+
+// обработчик кнопки сохранить текст
+document
+  .getElementById("save-to-file-button")
+  .addEventListener("click", function () {
+    const formArray = getArrayFromContainer("main-form");
+    const str = getStringFromArray(formArray);
+    const text = getTextFromString(str);
+    saveToFile(text);
+  });
+// Обработчик кнопки сохранения
+document
+  .getElementById("save-to-file-ls")
+  .addEventListener("click", function () {
+    saveFormStorage("main-form");
+  });

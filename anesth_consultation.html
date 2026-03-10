@@ -11,16 +11,15 @@
 </head>
 
 <body>
-  <header>
+ <header>
     <!-- Навигационная панель -->
     <div class="d-block px-3 py-2 text-center text-bold skippy" style="background-color: #083880; opacity: 90%">
-      <a href="https://getbootstrap.com/" class="text-white text-decoration-none">There's a newer version of
-        Bootstrap!</a>
+      <a href="https://getbootstrap.com/" class="text-white text-decoration-none">Работает с Bootstrap</a>
     </div>
     <nav class="navbar navbar-expand-md navbar-dark bg-primary bg-gradient mb-4 py-0">
       <div class="container d-flex align-items-center">
         <!-- Логотип -->
-        <a class="navbar-brand d-flex align-items-center" href="#">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
           <img src="img/stethoscope_light.png" height="50px" alt="Изображение фонендоскопа" />FormSerializer
         </a>
         <!-- Ссылка на источник изображения: https://sergeychikin.ru/365/ Image by Сергей Чикин, brakodelnya@gmail.com-->
@@ -30,11 +29,11 @@
           <!-- Основные пункты меню (me-auto - выравнивание слева) -->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" aria-current="page" href="index.html">Главная</a>
               <!-- Активная ссылка -->
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" href="anesth_consultation.html">Осмотр анестезиолога</a>
               <!-- Обычная ссылка -->
             </li>
 
@@ -42,33 +41,34 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                Dropdown
+                Протоколы
               </a>
               <!-- Список выпадающего меню -->
               <ul id="main-menu-ul" class="dropdown-menu bg-light" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Протокол ЦВК</a></li>
+                <li><a class="dropdown-item" href="#">Протокол артерия</a></li>
+                <li><a class="dropdown-item" href="#">Протокол анестезии</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                   <!-- Разделитель пунктов меню -->
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                  <a class="dropdown-item" href="#">Другие протоколы</a>
                 </li>
               </ul>
             </li>
 
             <!-- Неактивная  ссылка -->
             <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Дополнительно</a>
             </li>
           </ul>
 
           <!-- Форма поиска как flex-контейнер -->
           <form class="d-flex" onsubmit="handleSearch(event)">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
             <button class="btn btn-outline-light" type="submit">
-              Search
+              Найти
             </button>
           </form>
         </div>
@@ -81,10 +81,9 @@
     ☰
   </button>
 
-
-  <div class="container">
+<div class="container d-flex justify-content-center align-items-center">
     <div class="content">
-      <!-- Выезжающее меню offcanvas -->
+       <!-- Боковое меню offcanvas (динамическое меню будет заполнено скриптом) -->
       <div class="offcanvas offcanvas-start bg-light" id="sidebarMenu" aria-labelledby="sidebarLabel">
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="sidebarLabel">Меню</h5>
@@ -325,7 +324,7 @@
   <script src="js/source.js">
     // JS
   </script>
-  <script src="js/page_builder.js">
+  <script src="js/anesth_consult_page_builder.js">
     // JS
   </script>
   <script src="js/variables.js">
