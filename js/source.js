@@ -3,8 +3,9 @@
 const mapElements = new Map([
   ["index.html", "Главная страница"],
   ["anesth_consultation.html", "Осмотр ансетезиолога"],
-  ["#", "Протокол ЦВК"]
-
+  ["#", "Протокол ЦВК"],
+  ["#", "Протокол артерия"],
+  ["#", "Протокол анесетезии"],
 ]);
 
 /* ФУНКЦИИ */
@@ -190,7 +191,13 @@ function addHeading(targetTagId, text, size = "3") {
 }
 
 // Добавляет <label> и <input> в указанный контейнер
-function addLabelInput(targetTagId, name, value = "", subtext = "", placeholder) {
+function addLabelInput(
+  targetTagId,
+  name,
+  value = "",
+  subtext = "",
+  placeholder,
+) {
   const tag = document.getElementById(targetTagId);
 
   // IDs
@@ -205,7 +212,7 @@ function addLabelInput(targetTagId, name, value = "", subtext = "", placeholder)
   input.setAttribute("type", type);
   input.setAttribute("name", name);
   input.setAttribute("value", value);
-  if(placeholder){
+  if (placeholder) {
     input.placeholder = placeholder;
   }
   // bootstrap
@@ -538,7 +545,7 @@ function loadFormFromStorage(formId) {
 }
 
 // Очистка localStorage
-function clearLocalStorage(){
+function clearLocalStorage() {
   alert("Хранилище очищено!");
   localStorage.clear();
   location.reload(); //перезагрузка страницы

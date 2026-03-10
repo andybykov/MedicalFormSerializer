@@ -2,7 +2,7 @@
 function pageBuilder() {
   addCurrentYearInSpan("current-year");
   //  addElementToMenu('main-menu-ul', 'index.html','TEXT')
-  addElementToMainMenu("main-menu-ul", "dropdown-item", mapElements);
+  //addElementToMainMenu("main-menu-ul", "dropdown-item", mapElements);
   addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
   //builder('main-form');
   addLabelInputWithType("date", "date", "Дата", "2026-01-01", "dd.mm.yyyy");
