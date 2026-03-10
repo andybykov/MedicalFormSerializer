@@ -7,11 +7,11 @@
   <link rel="shortcut icon" href="img/icons/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="css/lib/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="css/styles.css" />
-  <title>Сериализатор форм</title>
+  <title>Осмотр анестезиолога</title>
 </head>
 
-<body>
- <header>
+<body class="bg-light">
+  <header>
     <!-- Навигационная панель -->
     <div class="d-block px-3 py-2 text-center text-bold skippy" style="background-color: #083880; opacity: 90%">
       <a href="https://getbootstrap.com/" class="text-white text-decoration-none">Работает с Bootstrap!</a>
@@ -75,76 +75,86 @@
       </div>
     </nav>
   </header>
+
   <!-- Кнопка открытия меню -->
   <button class="btn btn-secondary position-fixed bottom-0 start-0 m-3" type="button" data-bs-toggle="offcanvas"
     data-bs-target="#sidebarMenu" id="main-dropdown-butt">
     ☰
   </button>
 
-<div class="container d-flex justify-content-center align-items-center">
-    <div class="content">
-       <!-- Боковое меню offcanvas (динамическое меню будет заполнено скриптом) -->
-      <div class="offcanvas offcanvas-start bg-light" id="sidebarMenu" aria-labelledby="sidebarLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="sidebarLabel">Меню</h5>
+  <!-- Боковое меню offcanvas (динамическое меню будет заполнено скриптом) -->
+  <div class="offcanvas offcanvas-start bg-light" id="sidebarMenu" aria-labelledby="sidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="sidebarLabel">Меню</h5>
 
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <hr />
-        <div class="offcanvas-body">
-          <!-- Динамическое меню -->
-          <ul class="nav nav-pills flex-column mb-auto" id="menu-ul"></ul>
-        </div>
-      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <hr />
+    <div class="offcanvas-body">
+      <!-- Динамическое меню -->
+      <ul class="nav nav-pills flex-column mb-auto" id="menu-ul"></ul>
+    </div>
+  </div>
 
+  <!-- Кнопки справа внизу -->
+  <div class="position-fixed bottom-0 end-0 m-3 d-flex flex-column gap-2">
+    <button class="btn btn-primary" id="copy-button" title="Скопировать текст формы в буфер-обмена">Скопировать</button>
+    <button class="btn btn-primary" id="save-to-file-button" title="Скачать файл с текстом">Скачать</button>
+    <button class="btn btn-success" id="save-to-file-ls" title="Сохранить в локальное хранилище">Сохранить</button>
+    <button class="btn btn-danger" id="clear-ls" title="Очистить локальное хранилище"
+      onclick="clearLocalStorage()">Очистка</button>
+  </div>
+  <!---------------------------------------------------------------------------------------->
+  <main class="container content"> <!-- Главный контейнер-->
+
+    <div class="my-lg-3 p-3 bg-white rounded-bottom shadow-lg ">
       <!------ FORM ------->
       <form class="form-group" id="main-form">
         <div id="block-1">
           <!-- Heading -->
-          <h3>Осмотр анестезиолога-реаниматолога</h3>
+          <h4 class="border-bottom border-gray pb-2 mb-0">Осмотр анестезиолога-реаниматолога</h4>
           <!-- НАЧАЛО -- Блок-1: Дата, Время, Антропометрические данные, Группа крови, Резус фактор -->
-          <div class="row mt-4">
-            <!-- ЛЕВАЯ КОЛОНКА: Дата и время -->
-            <div class="col d-flex flex-column justify-content-start align-items-start">
-              <!-- Прижато по сверху и  влево -->
-              <div class="d-flex align-items-center mb-3" id="date"></div> <!-- по центру содержимого -->
-              <div class="d-flex align-items-center mb-3" id="time"></div> <!-- по центру содержимого -->
-              <!-- chekbox -->
-              <div class="card">
-                <div class="card-header">
-                  <h6>Пол</h6>
-                </div>
-                <div class="card-body">
-                  <div class="form-check" id="male"></div>
-                  <div class="form-check" id="female"></div>
-                </div>
+          <div class="row mt-4 g-4">
+            <!-- Дата и время + Пол -->
+            <div class="col">
+              <!-- Дата и время -->
+              <div class="d-flex flex-column gap-2">
+                <div class="d-flex align-items-center fixed-input" id="date"></div>
+                <div class="d-flex align-items-center fixed-input" id="time"></div>
+              </div>
+              <!-- Пол -->
+              <div class="d-flex gap-4 mt-3 pt-3">
+                <div class="form-check" id="male"></div>
+                <div class="form-check" id="female"></div>
               </div>
             </div>
-            <div class="col"></div> <!-- пустая колонка -->
-            <!-- ПРАВАЯ КОЛОНКА: всё остальное -->
-            <div class="col d-flex flex-column justify-content-start align-items-start">
-              <!-- ГРУППА КРОВИ И РЕЗУС  -->
-              <div class="d-flex align-items-center fixed-label fixed-input" id="blood-gr"></div>
-              <div class="fixed-input d-flex align-items-center mb-3 fixed-label" id="blood-gr-rh"></div>
+
+            <!-- Группа крови и Резус -->
+            <div class="col-md-7">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center" id="blood-gr"></div>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center" id="blood-gr-rh"></div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="row mt-2 row-cols-2"><!-- два столбца -->
+          <!-- Антропометрические данные -->
+          <div class="row mt-4">
             <div class="col">
-            </div>
-            <div class="col card">
-              <!-- АНТРОПОМЕТРИЯ - -->
-              <!-- Заголовок -->
-              <div class="card-title mb-3 mt-4" id="block-anthropometric-data"></div>
-              <div class="d-flex card-body col-auto"><!-- горизонтальный ряд -->
-                <div class="d-flex align-items-center pe-sm-2" id="growth"></div>
-                <div class="d-flex align-items-center pe-sm-2" id="mass"></div>
-                <div class="d-flex align-items-center pe-sm-2" id="bsa-result"></div>
+              <div class="d-flex flex-nowrap align-items-center justify-content-around">
+                <div class="text-muted" id="block-anthropometric-data"></div>
+                <div class="d-flex align-items-center fixed-input" id="growth"></div>
+                <div class="d-flex align-items-center fixed-input" id="mass"></div>
+                <div class="d-flex align-items-center fixed-input" id="bsa-result"></div>
               </div>
+
             </div>
           </div>
         </div>
-
         <!-- КОНЕЦ -- Блок-1 -->
         <div id="block-2">
           <!-- НАЧАЛО -- Блок-2: Диагноз -->
@@ -175,7 +185,9 @@
           <div class="mb-3" id="other-operations"></div>
         </div>
         <!-- Конец -- Блок-3: Доп сведения, операции, аллергии итд -->
-        <div id="block-physical-exam"></div> <!-- Заголовок: Физикальное обследование -->
+        <div class="border-bottom border-gray mb-3" id="block-physical-exam"></div>
+        <!-- Заголовок: Физикальное обследование -->
+
 
         <div class="row" id="block-4">
           <!-- НАЧАЛО -- Блок-4: Физикальное обследование -->
@@ -186,8 +198,8 @@
           <div class="col-6 mb-3" id="patient-skin"></div>
           <div class="col-6" id="patient-edema"></div>
           <div class="mb-4"></div>
-          <div class="">
-            <div class="card">
+          <div>
+            <div class="rounded-top-5">
               <div class="card-header">
                 <h6>Сердечно-сосудистая система</h6>
               </div>
@@ -205,51 +217,47 @@
             </div>
           </div>
           <div class="mb-3"></div>
-          <div class="">
-            <div class="card">
-              <div class="card-header">
-                <h6>Дыхательная система</h6>
+          <div class="rounded-top-5">
+            <div class="card-header">
+              <h6>Дыхательная система</h6>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col me-3" id="patient-auscultation-type-1"></div>
+                <div class="col" id="patient-auscultation-type-2"></div>
               </div>
-              <div class="card-body">
-                <div class="row mb-3">
-                  <div class="col me-3" id="patient-auscultation-type-1"></div>
-                  <div class="col" id="patient-auscultation-type-2"></div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 mb-3  fixed-input" id="patient-breath-rate"></div>
-                  <div class="col-6 mb-3 fixed-input" id="patient-spo2"></div>
-                  <div class="col-6 mb-1 fixed-input" id="patient-ecg"></div>
-                </div>
+              <div class="row mb-3">
+                <div class="col-6 mb-3  fixed-input" id="patient-breath-rate"></div>
+                <div class="col-6 mb-3 fixed-input" id="patient-spo2"></div>
+                <div class="col-6 mb-1 fixed-input" id="patient-ecg"></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="mb-3"></div>
+          <div class="rounded-top-5">
+            <div class="card-header">
+              <h6>ЖКТ</h6>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col me-3" id="patient-abdomen-1"></div>
+                <div class="col" id="patient-abdomen-2"></div>
+                <div class="col" id="patient-dyspes"></div>
               </div>
             </div>
           </div>
           <div class="mb-3"></div>
-          <div class="">
-            <div class="card">
-              <div class="card-header">
-                <h6>ЖКТ</h6>
-              </div>
-              <div class="card-body">
-                <div class="row mb-3">
-                  <div class="col me-3" id="patient-abdomen-1"></div>
-                  <div class="col" id="patient-abdomen-2"></div>
-                  <div class="col" id="patient-dyspes"></div>
-                </div>
-              </div>
+
+          <div class="rounded-top-5">
+            <div class="card-header">
+              <h6>Мочеполовая система</h6>
             </div>
-          </div>
-          <div class="mb-3"></div>
-          <div class="">
-            <div class="card">
-              <div class="card-header">
-                <h6>Мочеполовая система</h6>
-              </div>
-              <div class="card-body">
-                <div class="row mb-3">
-                  <div class="col me-3" id="patient-urination"></div>
-                  <div class="col" id="patient-dialisis"></div>
-                  <div class="col" id="patient-dyspes"></div>
-                </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col me-3" id="patient-urination"></div>
+                <div class="col" id="patient-dialisis"></div>
+                <div class="col" id="patient-dyspes"></div>
               </div>
             </div>
           </div>
@@ -260,7 +268,7 @@
         <div id="block-5">
           <!-- НАЧАЛО -- Блок-5: Лабораторные данные, дообследование -->
 
-          <div class="card">
+          <div class="rounded-top-5">
             <div class="card-header">
               <h6>Обследования</h6>
             </div>
@@ -272,46 +280,37 @@
                 <div class="col" id="deep-examination"></div>
               </div>
             </div>
+
+
           </div>
-
-
-        </div>
-        <!-- КОНЕЦ -- Блок-5: Лабораторные данные, дообследование -->
-
-        <!----------------------------------->
-        <div class="row" id="block-6">
-          <!-- НАЧАЛО -- Блок-6: Планируемая операция, анестезия... -->
-          <div class="mb-3" id="planned-operation"></div>
-          <div class="mb-3" id="planned-anesth"></div>
-          <div class="row align-content-center">
-            <div class="col-6 mb-3 align-content-center" id="mallampati"></div>
-            <div class="col-6 mb-3 align-content-center" id="asa"></div>
-            <div class="col" id="planned-monitoring"></div>
+          <!-- КОНЕЦ -- Блок-5: Лабораторные данные, дообследование -->
+          <div class="line-spacer"></div>
+          <!----------------------------------->
+          <div class="row" id="block-6">
+            <!-- НАЧАЛО -- Блок-6: Планируемая операция, анестезия... -->
+            <div class="mb-3" id="planned-operation"></div>
+            <div class="mb-3" id="planned-anesth"></div>
+            <div class="row align-content-center">
+              <div class="col-6 mb-3 align-content-center" id="mallampati"></div>
+              <div class="col-6 mb-3 align-content-center" id="asa"></div>
+              <div class="col" id="planned-monitoring"></div>
+            </div>
           </div>
+          <!-- КОНЕЦ -- Блок-6: Планируемая операция, анестезия... -->
+
+          <!----------------------------------->
+          <div class="row" id="block-7">
+            <!-- НАЧАЛО -- Блок-7: Планируемый мониторинг, премедикация... -->
+
+            <div class="mb-3" id="premedecation"></div>
+            <div class="mb-3" id="recomendations"></div>
+          </div>
+          <!-- КОНЕЦ -- Блок-7: Планируемый мониторинг, премедикация... -->
+
         </div>
-        <!-- КОНЕЦ -- Блок-6: Планируемая операция, анестезия... -->
-
-        <!----------------------------------->
-        <div class="row" id="block-7">
-          <!-- НАЧАЛО -- Блок-7: Планируемый мониторинг, премедикация... -->
-
-          <div class="mb-3" id="premedecation"></div>
-          <div class="mb-3" id="recomendations"></div>
-        </div>
-        <!-- КОНЕЦ -- Блок-7: Планируемый мониторинг, премедикация... -->
-
+      </form>
     </div>
-    </form>
-    <!-- Кнопки справа внизу -->
-    <div class="position-fixed bottom-0 end-0 m-3 d-flex flex-column gap-2">
-      <button class="btn btn-primary" id="copy-button">Скопировать</button>
-      <button class="btn btn-primary" id="save-to-file-button">Скачать</button>
-      <button class="btn btn-success" id="save-to-file-ls">Сохранить</button>
-      <button class="btn btn-danger" id="clear-ls" onclick="clearLocalStorage()">Очистка</button>
-    </div>
-  </div>
-  </div>
-
+  </main>
   <footer class="bg-light py-4">
     <div class="container text-center">
       FormSerializer © <span id="current-year"></span>
@@ -331,5 +330,6 @@
     // JS
   </script>
 </body>
+
 
 </html>

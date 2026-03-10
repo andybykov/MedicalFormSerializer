@@ -1,33 +1,22 @@
 .content {
-  background: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 15px;
-  padding: 2em 2em 3em 2em;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.18); /* тень */
-  max-width: 1000px;  
+  color: #363636;
+  max-width: 1000px;
 }
 
 /* Формы */
-.form-group {
-  padding: 15px;
-  margin-bottom: 20px;
-}
 .form-group label {
   margin-right: 2px;
   font-weight: bold;
-}
-.delivered {
-  width: 50%;
 }
 
 /* Поля ввода */
 .form-group input:not([type="radio"]):not([type="checkbox"]), /* исключение для радибаттон и чекбокс */
 .form-group textarea,
-.form-group select
- {
-  border: 2px solid rgba(0, 0, 0, 0.25);
+.form-group select {
+  border: 2px solid rgba(0, 0, 0, 0.25) !important;
   width: 100%;
   font-size: 13px;
+  font-weight: 500;
   min-height: 40px;
   margin-left: 0.75em;
   margin-right: 1em;
@@ -39,55 +28,41 @@
   overflow: auto;
 }
 
-.form-group textarea {
-  min-height: 40px;
-  max-height: 200px;
-  resize: vertical;
-}
-
 /* Состояния полей */
-.form-group input:hover :not([type="radio"]):not([type="checkbox"]),
-.form-group textarea:hover,
-.form-group select:hover {
-  background: #d3d3d3;
-}
-.form-group input :focus:not([type="radio"]):not([type="checkbox"]),
 .form-group textarea:focus,
 .form-group select:focus {
   background: #fff;
   border: 2px solid #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  font-weight: bold;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 1);
 }
 
-.form-text {
-  /* margin: 1em !important; */
-  display: block;
+/* placeholder */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  font-weight: normal;
+  color: #949494;
 }
+
 /* Фикисрованный размер для label, input */
 .fixed-label {
-  min-width: 200px;
+  min-width: 100px;
 }
 .fixed-input {
-  width: 250px;
+  width: 150px;
 }
 
 /* Line spacer */
 .line-spacer {
+  display: block;
   height: 2px;
-
-  /*background-color: #1a1a1a;*/
   background-image: linear-gradient(90deg, #f7f7f7, #ebebeb, #f7f7f7);
-  opacity: 70%;
   margin-top: 2em;
   margin-bottom: 2em;
 }
 
 /* headers */
-h1,
-h2,
 h3,
-h4 {
-  text-align: center;
-  margin-bottom: 1em;
+h4,
+h5 {
+  color: rgb(110, 110, 110);
 }

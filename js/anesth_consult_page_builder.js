@@ -5,8 +5,8 @@ function pageBuilder() {
   //addElementToMainMenu("main-menu-ul", "dropdown-item", mapElements);
   addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
   //builder('main-form');
-  addLabelInputWithType("date", "date", "Дата", "2026-01-01", "dd.mm.yyyy");
-  addLabelInputWithType("time", "time", "Время", "11:00", "hh:mm");
+  addLabelInputWithType("date", "date", "Дата", getCurrentDate() );
+  addLabelInputWithType("time", "time", "Время", "11:00");
   addLabelRadioButton("male", "gender", "Мужчина", true);
   addLabelRadioButton("female", "gender", "Женщина");
   addLabelSelect("blood-gr", "Группа крови", bloodgr);
@@ -30,7 +30,7 @@ function pageBuilder() {
   addLabelInput("bad-habits", "Вредные привычки", "нет", "");
   addLabelInput("other-operations", "Операции, травмы", "нет", "");
 
-  addHeading("block-physical-exam", "Физикальное обследование", "4"); // Заголовок
+  addHeading("block-physical-exam", "Физикальное обследование", "5"); // Заголовок
 
   addLabelDatalist("patient-state", "Состояние", patientState);
   addLabelDatalist("patient-consciousness", "Сознание", patientConsciousness);
@@ -115,10 +115,15 @@ function pageBuilder() {
 // обработчик события для кнопки копирования
 document.getElementById("copy-button").addEventListener("click", function () {
   // Получаем текст ЗАНОВО при каждом клике
+  const isValidForm = validateForm("main-form");
+  
+  if(isValidForm){
   const formArray = getArrayFromContainer("main-form");
   const str = getStringFromArray(formArray);
   const text = getTextFromString(str);
   copyToClipboard(text);
+  }
+  
 });
 
 // обработчик кнопки сохранить текст
@@ -130,6 +135,7 @@ document
     const text = getTextFromString(str);
     saveToFile(text);
   });
+
 // Обработчик кнопки сохранения
 document
   .getElementById("save-to-file-ls")

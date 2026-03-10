@@ -31,6 +31,13 @@ function getCurrentYear() {
   return new Date().getFullYear();
 }
 
+// Получаем текущую дату
+function getCurrentDate() {
+  const dd = new Date().toLocaleDateString("en-CA"); // en-CA YYYY-MM-DDD
+  console.log(dd);
+  return dd;
+}
+
 // вставка года в Span
 function addCurrentYearInSpan(targetTagId) {
   targetTag = document.getElementById(targetTagId);
@@ -40,7 +47,6 @@ function addCurrentYearInSpan(targetTagId) {
 }
 
 /* ГЛАВНОЕ МЕНЮ */
-
 // Строит меню: добавляет <ll><a href="LINK">TEXT</a></li>
 // принимает targetTagId в качестве целевого объекта, куда размешать элементы меню
 function addElementToMenu(targetTagId, link, text) {
@@ -197,6 +203,7 @@ function addLabelInput(
   value = "",
   subtext = "",
   placeholder,
+  required = true
 ) {
   const tag = document.getElementById(targetTagId);
 
@@ -215,6 +222,7 @@ function addLabelInput(
   if (placeholder) {
     input.placeholder = placeholder;
   }
+  input.setAttribute("required", required)
   // bootstrap
   input.setAttribute("class", "form-control");
 
@@ -321,7 +329,7 @@ function addLabelSelect(targetTagId, name, options = [], subtext = "") {
 }
 
 // Создание и добавление label + datalist
-function addLabelDatalist(targetTagId, name, options = [], subtext = "") {
+function addLabelDatalist(targetTagId, name, options = [], subtext = "", required = true) {
   // ID
   const inputId = `${targetTagId}-input`;
   const datalistId = `${targetTagId}-datalist`;
@@ -336,6 +344,8 @@ function addLabelDatalist(targetTagId, name, options = [], subtext = "") {
 
   input.setAttribute("list", datalistId);
   input.placeholder = options[0];
+
+  input.setAttribute("required", required);
   // DEBUG!!!!!
   //input.value = options[0];
 
@@ -359,7 +369,7 @@ function addLabelDatalist(targetTagId, name, options = [], subtext = "") {
 }
 
 // Создание и добавление textarea
-function addTextarea(targetTag, name, placeholder = "") {
+function addTextarea(targetTag, name, placeholder = "", required = true) {
   // id
   const textareaId = `${targetTag}-textarea`;
   const tag = document.getElementById(targetTag);
@@ -372,6 +382,8 @@ function addTextarea(targetTag, name, placeholder = "") {
   textarea.placeholder = placeholder;
   // DEBUG!!!!!
   //textarea.value = "ИБС. СН 2 ФК. ГБ 3ст, 4ст, р4.";
+
+  textarea.setAttribute("required", required);
 
   const textareaLabel = addLabel(textareaId, "", name);
 
@@ -459,9 +471,15 @@ function getArrayFromContainer(containerId) {
         value = `${lastValue.trim()}, ${value.trim()}`; // добавялем текущее значение
         result.pop(); // удаляем последний элемент
       }
+// если это дата
+      if (container.type === "date") {
+      value = formatDateToHumanView(container.value); // меняем в человеческий формат
+    }
 
       result.push([name, value]);
     }
+
+    
 
     // совпадение по классу subtext.
     if (container.classList.contains("subtext")) {
@@ -495,62 +513,6 @@ function getArrayFromContainer(containerId) {
   return result;
 }
 
-// Сохранение в localStorage
-function saveFormStorage(formId) {
-  const form = document.getElementById(formId);
-  const elementsArr = Array.from(form.elements); // массив
-
-  const formData = {};
-
-  elementsArr.forEach((element) => {
-    //  есть name
-    if (element.name) {
-      // radio выбранное значение
-      if (element.type === "radio") {
-        if (element.checked) {
-          formData[element.name] = element.value;
-        }
-      }
-      // Для остальных полей -значение
-      else {
-        formData[element.name] = element.value;
-      }
-    }
-  });
-
-  // Сохраняем в localStorage
-  localStorage.setItem("formData", JSON.stringify(formData)); //в JSON
-}
-
-// загрузка из localStorage
-function loadFormFromStorage(formId) {
-  const form = document.getElementById(formId);
-  const savedData = localStorage.getItem("formData");
-
-  if (!savedData) return; // пусто!
-
-  const formData = JSON.parse(savedData);
-  const elementsArr = Array.from(form.elements);
-
-  elementsArr.forEach((element) => {
-    if (element.name && formData.hasOwnProperty(element.name)) {
-      if (element.type === "radio") {
-        // Для radio нужно установить checked, если значение совпадает
-        element.checked = element.value === formData[element.name];
-      } else {
-        element.value = formData[element.name];
-      }
-    }
-  });
-}
-
-// Очистка localStorage
-function clearLocalStorage() {
-  alert("Хранилище очищено!");
-  localStorage.clear();
-  location.reload(); //перезагрузка страницы
-}
-
 // Форматирование массива в строку
 function getStringFromArray(array) {
   let result = "";
@@ -578,6 +540,23 @@ function getStringFromArray(array) {
       result += "***" + value.trim() + "\n";
     }
   });
+
+  return result;
+}
+
+// Форматирование даты в человеческий вид: DD.MM.YYYY
+function formatDateToHumanView(date) {
+  if (!date) {
+    return "";
+  }
+
+  date = date.split("-");
+  const day = date[2];
+  const month = date[1];
+  const year = date[0];
+
+  const result = `${day}.${month}.${year}`;
+  console.log(result);
 
   return result;
 }
@@ -690,7 +669,7 @@ function printArray(array) {
     console.log(`${key}: ${value}`);
   });
 }
-
+// поиск по HTML тексту
 function handleSearch(event) {
   event.preventDefault(); // ОСТАНОВИТЬ отправку формы, чтобы не перезагружалась страница
   // Получаем значение из input
@@ -706,9 +685,89 @@ function handleSearch(event) {
   }
 }
 
+// Сохранение в localStorage
+function saveFormStorage(formId) {
+  const form = document.getElementById(formId);
+  const elementsArr = Array.from(form.elements); // массив
+
+  const formData = {};
+
+  elementsArr.forEach((element) => {
+    //  есть name
+    if (element.name) {
+      // radio выбранное значение
+      if (element.type === "radio") {
+        if (element.checked) {
+          formData[element.name] = element.value;
+        }
+      }
+      // Для остальных полей -значение
+      else {
+        formData[element.name] = element.value;
+      }
+    }
+  });
+
+  // Сохраняем в localStorage
+  localStorage.setItem("formData", JSON.stringify(formData)); //в JSON
+}
+
+// загрузка из localStorage
+function loadFormFromStorage(formId) {
+  const form = document.getElementById(formId);
+  const savedData = localStorage.getItem("formData");
+
+  if (!savedData) return; // пусто!
+
+  const formData = JSON.parse(savedData);
+  const elementsArr = Array.from(form.elements);
+
+  elementsArr.forEach((element) => {
+    if (element.name && formData.hasOwnProperty(element.name)) {
+      if (element.type === "radio") {
+        // Для radio нужно установить checked, если значение совпадает
+        element.checked = element.value === formData[element.name];
+      } else {
+        element.value = formData[element.name];
+      }
+    }
+  });
+}
+
+// валидцаия формы
+function validateForm(formId) {
+  const form = document.getElementById(formId);
+  
+  if (form.checkValidity()) {
+    // все required поля заполнены
+    console.log('Форма валидна');
+    return true;
+  } else {
+    // Форма невалидна 
+    form.reportValidity();
+    console.log('Заполните обязательные поля');
+    return false;
+  }
+}
+
+// Очистка localStorage
+function clearLocalStorage() {
+  alert("Хранилище очищено!");
+  localStorage.clear();
+  location.reload(); //перезагрузка страницы
+}
+
 /* Автозапуск при загрузке DOM */
 function onLoadPage() {
   pageBuilder();
 }
 // Обработчки события загрузки всего DOM - DOMContentLoaded
 document.addEventListener("DOMContentLoaded", onLoadPage);
+
+
+const myModal = document.getElementById('myModal')
+const myInput = document.getElementById('myInput')
+
+myModal.addEventListener('shown.bs.modal', () => {
+  myInput.focus()
+})
