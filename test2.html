@@ -65,12 +65,11 @@
           </ul>
 
           <!-- Форма поиска как flex-контейнер -->
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+          <form class="d-flex" onsubmit="handleSearch(event)">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-light" type="submit">
               Search
             </button>
-            <!-- Кнопка с светлой обводкой -->
           </form>
         </div>
       </div>
@@ -81,6 +80,7 @@
     data-bs-target="#sidebarMenu" id="main-dropdown-butt">
     ☰
   </button>
+
 
   <div class="container">
     <div class="content">
@@ -115,9 +115,9 @@
                 <div class="card-header">
                   <h6>Пол</h6>
                 </div>
-                <div class="card-body">                                    
-                    <div class="form-check" id="male"></div>
-                    <div class="form-check" id="female"></div>                                      
+                <div class="card-body">
+                  <div class="form-check" id="male"></div>
+                  <div class="form-check" id="female"></div>
                 </div>
               </div>
             </div>
@@ -300,12 +300,16 @@
           <div class="mb-3" id="recomendations"></div>
         </div>
         <!-- КОНЕЦ -- Блок-7: Планируемый мониторинг, премедикация... -->
+
     </div>
     </form>
-
-    <button name="button" onclick="getArrayFromForm('main-form')">
-      Тык!
-    </button>
+    <!-- Кнопки справа внизу -->
+    <div class="position-fixed bottom-0 end-0 m-3 d-flex flex-column gap-2">
+      <button class="btn btn-primary" id="copy-button">Скопировать</button>
+      <button class="btn btn-primary" id="save-to-file-button">Скачать</button>
+      <button class="btn btn-success" id="save-to-file-ls">Сохранить</button>
+      <button class="btn btn-danger" id="clear-ls" onclick="clearLocalStorage()">Очистка</button>
+    </div>
   </div>
   </div>
 

@@ -484,73 +484,61 @@ function getArrayFromContainer(containerId) {
   return result;
 }
 
-// Получение полей формы
-/*
-function getArrayFromForm(formId) {
+// Сохранение в localStorage
+function saveFormStorage(formId) {
   const form = document.getElementById(formId);
+  const elementsArr = Array.from(form.elements); // массив
 
-  //единцы измерения
-  const units = new Map([
-    ["Рост", "см"],
-    ["Масса", "кг"],
-    ["ППТ", "м²"],
-    ["АД", "mmHg"],
-    ["ЧД", "в мин"],
-    ["ЧСС", "в мин"],
-    ["SpO2", "%"],
-  ]);
-
-  // Собираем все значения в объект
   const formData = {};
-  // преобразование в массив
-  const elementsArr = Array.from(form.elements);
-  console.log(form);
-  // Перебираем все элементы
-  elementsArr.forEach((element, index) => {
-    // временная переменная для значения
-    let currentVal = element.value;
 
-    console.log();
-
-    let nameArr = element.name.trim();
-    let unit = units.get(nameArr); // получаем значение по ключу
-
-    // имя совпадает с ключом из мапы
-    if (nameArr && unit) {
-      currentVal = `${currentVal} ${unit}`; // собираем с единицами измерения
+  elementsArr.forEach((element) => {
+    //  есть name
+    if (element.name) {
+      // radio выбранное значение
+      if (element.type === "radio") {
+        if (element.checked) {
+          formData[element.name] = element.value;
+        }
+      }
+      // Для остальных полей -значение
+      else {
+        formData[element.name] = element.value;
+      }
     }
-
-    if (!element.name) {
-      // получаем предыдущий элемент
-      let prevElement = elementsArr[index - 1];
-
-      //значение предыдущего элемента
-      let prevVal = prevElement.value;
-      //имя предыдущего элемента
-      let pervName = prevElement.name;
-
-      // правим текущее значение (предыдущее + текущее)
-      currentVal = `${prevVal} ${currentVal}`;
-
-      formData[pervName] = currentVal;
-    } else {
-      formData[element.name] = currentVal;
-    }
-
-    // console.log(`${element.name.trim()}: ${val || "(no units!)"}`);
-
-    //if (element.name) {
-
-    //console.log(`${element.name}: ${element.value} (${element.tagName})`);
-    //console.log(`${element.name}: ${element.value}`);
-    //}
   });
 
-  //console.log(formData);
-
-  const formArr = Object.entries(formData);
+  // Сохраняем в localStorage
+  localStorage.setItem("formData", JSON.stringify(formData)); //в JSON
 }
-*/
+
+// загрузка из localStorage
+function loadFormFromStorage(formId) {
+  const form = document.getElementById(formId);
+  const savedData = localStorage.getItem("formData");
+
+  if (!savedData) return; // пусто!
+
+  const formData = JSON.parse(savedData);
+  const elementsArr = Array.from(form.elements);
+
+  elementsArr.forEach((element) => {
+    if (element.name && formData.hasOwnProperty(element.name)) {
+      if (element.type === "radio") {
+        // Для radio нужно установить checked, если значение совпадает
+        element.checked = element.value === formData[element.name];
+      } else {
+        element.value = formData[element.name];
+      }
+    }
+  });
+}
+
+// Очистка localStorage
+function clearLocalStorage(){
+  alert("Хранилище очищено!");
+  localStorage.clear();
+  location.reload(); //перезагрузка страницы
+}
 
 // Форматирование массива в строку
 function getStringFromArray(array) {
@@ -579,8 +567,7 @@ function getStringFromArray(array) {
       result += "***" + value.trim() + "\n";
     }
   });
-  // DEGUBG!
-  //console.log(result);
+
   return result;
 }
 
@@ -651,7 +638,39 @@ function getTextFromString(str) {
         result += line.trim() + "\n";
     }
   }
-  console.log(result);
+
+  return result;
+}
+
+// Копирование в буфер-обмена
+function copyToClipboard(text) {
+  //Clipboard API
+  try {
+    navigator.clipboard.writeText(text);
+    console.log("Text copied!");
+    window.alert("Текст скопирован в буфер обмена!");
+  } catch (err) {
+    console.error("Failed to copy:", err);
+  }
+}
+
+// сохранение в файл
+function saveToFile(data, filename = "data") {
+  const timeStamp = new Date().getTime();
+  //  Упаковываем данные в Blob-контейнер
+  const blob = new Blob([data], { type: "text/plain" });
+
+  //  временная ссылка на Blob
+  const url = URL.createObjectURL(blob);
+
+  // Создаем виртуальную ссылку и кликаем по ней
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename + timeStamp + ".txt";
+  link.click();
+
+  //очищаеим память
+  URL.revokeObjectURL(url);
 }
 
 // Рапечатка массива
@@ -660,15 +679,52 @@ function printArray(array) {
     console.log(`${key}: ${value}`);
   });
 }
+
+function handleSearch(event) {
+  event.preventDefault(); // ОСТАНОВИТЬ отправку формы, чтобы не перезагружалась страница
+  // Получаем значение из input
+  const searchInput = event.target.querySelector('input[type="search"]');
+  const searchText = searchInput.value;
+
+  if (searchText.trim()) {
+    if (window.find) {
+      window.find(searchText); //  браузерный поиск
+    } else {
+      alert("Search not supported!");
+    }
+  }
+}
+
 /* Автозапуск при загрузке DOM */
 function onLoadPage() {
   pageBuilder();
+  loadFormFromStorage("main-form");
   startEventListenFocusBsa("bsa-result-input");
-
-  const formArray = getArrayFromContainer("main-form");
-  //printArray(formArray);
-  const str = getStringFromArray(formArray);
-  getTextFromString(str);
 }
 // Обработчки события загрузки всего DOM - DOMContentLoaded
 document.addEventListener("DOMContentLoaded", onLoadPage);
+
+// обработчик события для кнопки копирования
+document.getElementById("copy-button").addEventListener("click", function () {
+  // Получаем текст ЗАНОВО при каждом клике
+  const formArray = getArrayFromContainer("main-form");
+  const str = getStringFromArray(formArray);
+  const text = getTextFromString(str);
+  copyToClipboard(text);
+});
+
+// обработчик кнопки сохранить текст
+document
+  .getElementById("save-to-file-button")
+  .addEventListener("click", function () {
+    const formArray = getArrayFromContainer("main-form");
+    const str = getStringFromArray(formArray);
+    const text = getTextFromString(str);
+    saveToFile(text);
+  });
+// Обработчик кнопки сохранения
+document
+  .getElementById("save-to-file-ls")
+  .addEventListener("click", function () {
+    saveFormStorage("main-form");
+  });
