@@ -415,7 +415,7 @@ function startEventListenFocusBsa(tagId) {
   });
 }
 
-// Получение данных из контейнера-ФОРМЫ
+// Получение массива из контейнера-ФОРМЫ
 function getArrayFromContainer(containerId) {
   let container = document.getElementById(containerId);
   const result = [];
@@ -553,32 +553,104 @@ function getArrayFromForm(formId) {
 */
 
 // Форматирование массива в строку
-function textFromArray(array) {
+function getStringFromArray(array) {
   let result = "";
-  const exp = /[.]/;    // регулярное выражение
+  const exp = /[.]/; // регулярное выражение
 
   array.forEach(([name, value]) => {
     // если не разделитель и не заголовок, значит обычный текст
     if (!(name == "spacer") && !(name == "heading")) {
       let line = "";
       line += name.trim() + ":  " + value.trim();
-       // проверяем наличие в строке выражения exp
-      if (!exp.test(line)) {
+
+      const endLine = line[line.length - 1]; // конец строки
+      // проверяем наличие в строке выражения exp
+      if (!exp.test(endLine)) {
         line += "."; // добавляем точку
       }
       result += line + "\n";
     }
-
     // разделитель
     if (name == "spacer") {
-      result += "-".repeat(100) + "\n\n";
+      result += "-".repeat(100) + "\n";
     }
     // заголовок
     if (name == "heading") {
-      result += value.trim() + "\n";
+      result += "***" + value.trim() + "\n";
     }
   });
   // DEGUBG!
+  //console.log(result);
+  return result;
+}
+
+// Форматирование строки в текст
+function getTextFromString(str) {
+  //разбивает строку на массив подстрок по "\n"
+  const lines = str.split("\n");
+
+  const spacer = "----"; // разделитель
+
+  // счетчик разделителей
+  let spacerConnter = 0;
+
+  let result = "";
+
+  // Обрабатываем каждую строку
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
+
+    if (!line) continue; // пустая строка - пропускаем
+
+    // это заголовок
+    if (line.startsWith("***")) {
+      const header = line.replace("***", " "); // убираем лишнее
+      result += "\n" + header + "\n";
+      continue; // на следующую итерацию
+    }
+
+    // считаем разделители
+    if (line.includes(spacer)) {
+      spacerConnter++;
+      result += line.trim() + "\n";
+      continue;
+    }
+
+    // Форматирование между разделитлями
+    switch (spacerConnter) {
+      case 2:
+        result += line.trim() + "\n"; // обработка текста после второго разделителя
+        break;
+
+      case 3:
+        if (line.length > 100) {
+          const tmpLine = line.split(" "); // разеделям на массив по пробелу
+          const idxCenter = parseInt(tmpLine.length / 2); // половина массива
+
+          for (let idx = 0; idx < tmpLine.length; idx++) {
+            result += tmpLine[idx] + " "; // добвляем по одному слову
+            // первая половина
+            if (idx == idxCenter - 1) {
+              result += "\n";
+            }
+            // вторая половина
+            if (idx == tmpLine.length - 1) {
+              result += "\n";
+            }
+          }
+        } else {
+          if (line.length < 20) {
+            result += line.trim() + " ";
+          } else {
+            result += line + "\n";
+          }
+        }
+        break;
+
+      default:
+        result += line.trim() + "\n";
+    }
+  }
   console.log(result);
 }
 
@@ -595,7 +667,8 @@ function onLoadPage() {
 
   const formArray = getArrayFromContainer("main-form");
   //printArray(formArray);
-  textFromArray(formArray);
+  const str = getStringFromArray(formArray);
+  getTextFromString(str);
 }
 // Обработчки события загрузки всего DOM - DOMContentLoaded
 document.addEventListener("DOMContentLoaded", onLoadPage);

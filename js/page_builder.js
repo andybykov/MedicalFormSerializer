@@ -76,12 +76,12 @@ function pageBuilder() {
   addLabelDatalist("patient-abdomen-2", "", patientAbdomen[1]);
   addLabelInput("patient-dyspes", "Признаки диспепсии", "нет", "");
   addLabelDatalist("patient-urination", "Мочеиспускание", patientUrination);
-  addLabelDatalist("patient-dialisis", "Гемодиализ", ["нет", "да"]);
+  addLabelDatalist("patient-dialisis", "Гемодиализ", ["!!нет", "да"]);
 
   addLabelInput(
     "analiysis",
     "Данные лабораторных и инструментальных исследований ",
-    "В пределах референсных значений",
+    "ЭКГ: ритм синусовый, частые желудочковые эктрасистолы, нормальное положение элеектрической оси сердца, частота сокращения желудочков 10212 в секунду",
   );
   addLabelInput("deep-examination", "Необходимость дообследования", "нет", "");
   addLabelInput("planned-operation", "Планируемая операция");
