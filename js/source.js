@@ -168,8 +168,6 @@ function addSubText(id, subtext) {
   addedText.setAttribute("class", "form-text subtext");
   addedText.textContent = " " + subtext;
 
-
-
   return addedText;
 }
 
@@ -433,8 +431,7 @@ function getArrayFromContainer(containerId) {
       container.tagName === "SELECT" ||
       container.tagName === "TEXTAREA"
     ) {
-
-      if (container.name  === "gender"){
+      if (container.name === "gender") {
         // пол не обрабатывааем
         continue;
       }
@@ -558,10 +555,19 @@ function getArrayFromForm(formId) {
 // Форматирование массива в строку
 function textFromArray(array) {
   let result = "";
+  const exp = /[.]/;    // регулярное выражение
+
   array.forEach(([name, value]) => {
-    // если не разделитель и не заголовок
-    if (!(name == "spacer") && !(name == "heading"))
-      result += name.trim() + ":  " + value.trim() + "\n";
+    // если не разделитель и не заголовок, значит обычный текст
+    if (!(name == "spacer") && !(name == "heading")) {
+      let line = "";
+      line += name.trim() + ":  " + value.trim();
+       // проверяем наличие в строке выражения exp
+      if (!exp.test(line)) {
+        line += "."; // добавляем точку
+      }
+      result += line + "\n";
+    }
 
     // разделитель
     if (name == "spacer") {
@@ -572,6 +578,7 @@ function textFromArray(array) {
       result += value.trim() + "\n";
     }
   });
+  // DEGUBG!
   console.log(result);
 }
 
