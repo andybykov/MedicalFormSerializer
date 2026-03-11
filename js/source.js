@@ -3,7 +3,7 @@
 const mapElements = new Map([
   ["index.html", "Главная страница"],
   ["anesth_consultation.html", "Осмотр ансетезиолога"],
-  ["#", "Протокол ЦВК"],
+  ["central_ven_catheter.html", "Протокол ЦВК"],
   ["#", "Протокол артерия"],
   ["#", "Протокол анесетезии"],
 ]);
@@ -363,6 +363,9 @@ function addLabelDatalist(
   // DEBUG!!!!!
   //input.value = options[0];
 
+  // bootstrap
+  input.setAttribute("class", "form-control");
+
   const datalist = document.createElement("datalist");
 
   datalist.id = `${targetTagId}-datalist`;
@@ -716,13 +719,14 @@ function saveFormStorage(formId) {
       }
       // Для остальных полей -значение
       else {
-        formData[element.name] = element.value;
+        formData[element.name] = element.value;        
       }
     }
   });
 
   // Сохраняем в localStorage
   localStorage.setItem("formData", JSON.stringify(formData)); //в JSON
+  alert("Данные сохранены!");
 }
 
 // загрузка из localStorage
@@ -733,6 +737,8 @@ function loadFormFromStorage(formId) {
   if (!savedData) return; // пусто!
 
   const formData = JSON.parse(savedData);
+  //DEBUG!
+  //console.log(formData);
   const elementsArr = Array.from(form.elements);
 
   elementsArr.forEach((element) => {
@@ -762,6 +768,7 @@ function validateForm(formId) {
     return false;
   }
 }
+
 // полная дата с месяцами
 function getHumanablerDate() {
   const days = [
@@ -808,6 +815,7 @@ function onLoadPage() {
   addTexInElement("upper-header-text", date);
   addCurrentYearInSpan("current-year");
   addElementToMainMenu("menu-ul", "dropdown-item", mapElements);
+  loadFormFromStorage("main-form"); // Загрузка из localStorage  
 }
 // Обработчки события загрузки всего DOM - DOMContentLoaded
 document.addEventListener("DOMContentLoaded", onLoadPage);

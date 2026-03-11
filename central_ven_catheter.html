@@ -33,7 +33,7 @@
               <!-- Активная ссылка -->
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="anesth_consultation.html">Осмотр анестезиолога</a>
+              <a class="nav-link" href="anesth_consultation.html">Протокол катетеризации центральной вены</a>
               <!-- Обычная ссылка -->
             </li>
 
@@ -82,7 +82,7 @@
     ☰
   </button>
 
-  <!-- Динамическое боковое меню offcanvas -->
+  <!-- Боковое меню offcanvas (динамическое меню будет заполнено скриптом) -->
   <div class="offcanvas offcanvas-start bg-light" id="sidebarMenu" aria-labelledby="sidebarLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="sidebarLabel">Меню</h5>
@@ -107,70 +107,30 @@
   <!---------------------------------------------------------------------------------------->
   <main class="container content"> <!-- Главный контейнер-->
 
-    <div class="my-lg-3 p-4 bg-white rounded-bottom shadow-lg ">
+    <div class="my-lg-3 p-3 bg-white rounded-bottom shadow-lg ">
       <!------ FORM ------->
       <form class="form-group" id="main-form">
         <div id="block-1">
           <!-- Heading -->
-          <h4 class="border-bottom border-gray pb-2 mb-0">Осмотр анестезиолога-реаниматолога</h4>
-          <!-- НАЧАЛО -- Блок-1: Дата, Время, Антропометрические данные, Группа крови, Резус фактор -->
+          <h4 class="border-bottom border-gray pb-2 mb-0">Протокол катетеризации центральной вены</h4>
           <div class="row mt-4 g-4">
-            <!-- Дата и время + Пол -->
             <div class="col">
               <!-- Дата и время -->
               <div class="d-flex flex-column gap-2">
                 <div class="d-flex align-items-center fixed-input" id="date"></div>
                 <div class="d-flex align-items-center fixed-input" id="time"></div>
               </div>
-              <!-- Пол -->
-              <div class="d-flex gap-4 mt-3 pt-3">
-                <div class="form-check" id="male"></div>
-                <div class="form-check" id="female"></div>
-              </div>
-            </div>
 
-            <!-- Группа крови и Резус -->
-            <div class="col-md-7">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <div class="d-flex align-items-center" id="blood-gr"></div>
-                </div>
-                <div class="col-md-6">
-                  <div class="d-flex align-items-center" id="blood-gr-rh"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Антропометрические данные -->
-          <div class="row mt-4">
-            <div class="col">
-              <div class="d-flex flex-nowrap align-items-center justify-content-around">
-                <div class="text-muted" id="block-anthropometric-data"></div>
-                <div class="d-flex align-items-center fixed-input" id="growth"></div>
-                <div class="d-flex align-items-center fixed-input" id="mass"></div>
-                <div class="d-flex align-items-center fixed-input" id="bsa-result"></div>
-              </div>
-
-            </div>
           </div>
         </div>
         <!-- КОНЕЦ -- Блок-1 -->
-        <div id="block-2">
-          <!-- НАЧАЛО -- Блок-2: Диагноз -->
-          <div class="d-flex">
-            <div id="diagnosis"></div>
-          </div>
-        </div>
-
-
-        <!-- КОНЕЦ -- Блок-2 -->
+            <!-- КОНЕЦ -- Блок-2 -->
         <div class="row" id="block-3">
           <!-- НАЧАЛО -- Блок-3: Доп сведения, операции, аллергии итд -->
 
           <!-- ЛЕВЫЙ СТОЛБЕЦ: жалобы, аллергия, лекарства -->
           <div class="col-md-6">
-            <div id="added-info-about-ds"></div>
+            <div id="indications-for-catheterization"></div>
             <div id="complaints" class="mb-3"></div>
             <div id="allergy" class="mb-3"></div>
             <div id="drugs" class="mb-3"></div>
@@ -282,7 +242,8 @@
 
 
           </div>
-          <!-- КОНЕЦ -- Блок-5: Лабораторные данные, дообследование -->          
+          <!-- КОНЕЦ -- Блок-5: Лабораторные данные, дообследование -->
+          <div class="line-spacer"></div>
           <!----------------------------------->
           <div class="row" id="block-6">
             <!-- НАЧАЛО -- Блок-6: Планируемая операция, анестезия... -->
@@ -321,7 +282,7 @@
   <script src="js/source.js">
     // JS
   </script>
-  <script src="js/anesth_consult_page_builder.js">
+  <script src="js/central_ven_catheter_builder.js">
     // JS
   </script>
   <script src="js/anesth_variables.js">

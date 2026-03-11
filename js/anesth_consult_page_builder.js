@@ -8,7 +8,7 @@ function pageBuilder() {
   addLabelRadioButton("male", "gender", "Мужчина", true);
   addLabelRadioButton("female", "gender", "Женщина");
   addLabelSelect("blood-gr", "Группа крови", bloodgr);
-  addLabelDatalist("blood-gr-rh", "Резус фактор", bloodgrRh);
+  addLabelSelect("blood-gr-rh", "Резус фактор", bloodgrRh);
 
   addHeading("block-anthropometric-data", "Антропометрические данные", "5"); // Звголовок
 
@@ -64,7 +64,7 @@ function pageBuilder() {
     "Аускультативно дыхание",
     patientAuscultation[0],
   );
-  addLabelDatalist("patient-auscultation-type-2", "", patientAuscultation[1]);
+  addLabelDatalist("patient-auscultation-type-2", " ", patientAuscultation[1]);
 
   addLabelInput("patient-breath-rate", "ЧД", "", "/min", "");
   addLabelInput("patient-spo2", "SpO2", "", "%", "");
@@ -103,10 +103,9 @@ function pageBuilder() {
   addLabelInput("premedecation", " Премедикация", premedecation);
   addLabelInput("recomendations", "Рекомендации", recomendations);
 
-  // Разделители
-  addSpacer(["block-1", "block-2", "block-3", "block-5", "block-6"]);
+  // Разделители вставляем в блоки
+  addSpacer(["block-1", "block-2", "block-3", "block-6" ]);
 
-  loadFormFromStorage("main-form"); // Загрузка из localStorage
   startEventListenFocusBsa("bsa-result-input"); // слушатель на ППТ
 }
 
